@@ -1,4 +1,4 @@
-const User = require('../models/user.model.js');
+const User = require('../Models/user.model.js');
 const bcrypt = require('bcrypt');
 const saltRounds = 10
 
