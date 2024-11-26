@@ -2,8 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 // const Product = require("./models/product.model.js");
 // const productRoute = require("./routes/product.route.js");
-const userRoute = require("./routes/User.route.js");
-const postRoute = require("./routes/post.route.js");
+const userRoute = require("./Routes/User.route.js");
+const postRoute = require("./Routes/book.route.js");
 const app = express();
 
 // middleware
@@ -13,8 +13,8 @@ app.use(cors());
 
 // routes
 // app.use("/api/products", productRoute);
-app.use("/users", userRoute);
-app.use("/posts", postRoute);
+app.use("/users", userRoute); // this uses query
+app.use("/item/", postRoute); // this uses body
 
 
 
