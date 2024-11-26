@@ -1,4 +1,4 @@
-const Book = require('../models/book.model.js');
+const Book = require('../Models/book.model.js');
 // const bcrypt = require('bcrypt');
 // const saltRounds = 10
 
