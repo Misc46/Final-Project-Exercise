@@ -12,14 +12,19 @@ const createBook = async (req, res) => {
 }
 
 const getBook = async (req,res)=>{
-  try {
-    const { id } = req.params;
-    const books = await Book.find(id);
-    res.status(200).json({success:true,data:books});
-  } catch (error) {
-    res.status(500).json({ success:false , message: error.message });
-  }
-};
+    try {
+        if (req.query){
+        const books = await Book.find(req.query);
+        res.status(200).json({success:true,data:books});
+        return
+        }
+        else{
+          res.status(200).json({success:true, data:await Book.find({})})
+        }
+      } catch (error) {
+        res.status(500).json({ success:false , message: error.message });
+      }
+    };
 
 const updateBook = async (req, res) => {
     try {
@@ -28,7 +33,7 @@ const updateBook = async (req, res) => {
         if (!profileBook) {
             return res.status(404).json({message: "User not found"})
         }
-        const profileBookUpdate = await dinoForums.findById(id);
+        const profileBookUpdate = await Book.findById(id);
         res.status(200).json({success: true, message: true, data: profileBookUpdate})
     } catch (error) {
         res.status(500).json({success: false, message: error.message})
