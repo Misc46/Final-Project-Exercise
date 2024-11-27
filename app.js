@@ -2,9 +2,13 @@ const express = require("express");
 const mongoose = require("mongoose");
 // const Product = require("./models/product.model.js");
 // const productRoute = require("./routes/product.route.js");
-const userRoute = require("./Routes/User.route.js");
+const userRoute = require("./Routes/user.route.js");
 const postRoute = require("./Routes/book.route.js");
 const app = express();
+require('dotenv').config()
+const uri = process.env.URI;
+const clientOptions = { serverApi: { version: '1', strict: true, deprecationErrors: true } };
+const cors = require("cors");
 
 // middleware
 app.use(express.json());
@@ -23,16 +27,13 @@ app.get("/", (req, res) => {
 });
 
 
-mongoose
-  .connect(
-    "#DATABASE CONNECT"
-  )
-  .then(() => {
-    console.log("Connected to database!");
-    app.listen(3000, () => {
-      console.log("Server is running on port 3000");
-    });
+async function run() {
+  await mongoose.connect(uri, clientOptions);
+  await mongoose.connection.db.admin().command({ ping: 1 });
+  console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  app.listen(3000,()=>{
+    console.log("Listening on port 3000");
   })
-  .catch(() => {
-    console.log("Connection failed!");
-  });
+
+}
+run().catch(console.dir);
