@@ -19,13 +19,26 @@ const userSchema = new mongoose.Schema(
         type:String,
         required:true
     },
-    list: [
-        {
+    list: {
+        type: [
+          {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
-        }
-    ]
+            ref: 'Book',
+          },
+        ],
+        validate: {
+          validator: function (value) {
+            // Ensure no duplicates
+            return Array.isArray(value) && new Set(value.map(String)).size === value.length;
+          },
+          message: 'List contains duplicate entries!',
+        },
+        set: function (value) {
+          // Automatically remove duplicates when setting the array
+          return [...new Set(value.map(String))];
+        },
     }
+}
 )
 
 const User = mongoose.model("User",userSchema);

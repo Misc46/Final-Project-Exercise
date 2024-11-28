@@ -1,3 +1,4 @@
+const Book = require('../Models/book.model.js');
 const User = require('../Models/user.model.js');
 const bcrypt = require('bcrypt');
 const saltRounds = 10
@@ -92,7 +93,117 @@ const editUser = async (req,res)=>{
   }
 }
 
+const getList = async(req,res)=>{
+  try{
+    const user = await User.findById(req.params.id,"list").populate("list");
+    res.status(200).json({success:true,data:user.list});
+  }
+  catch (error){
+    res.status(500).json({success:false,message:error.message});
+  }
+}
+
+const addToList = async (req, res) => {
+  try {
+    // Find user by username
+    const user = await User.findOne({ username: req.body.username });
+    if (!user) {
+      res.status(403).json({ success: false, message: "Incorrect login credentials" });
+      return;
+    }
+
+    // Check password
+    const passwordMatch = await bcrypt.compare(req.body.password, user.password);
+    if (!passwordMatch) {
+      res.status(403).json({ success: false, message: "Incorrect login credentials" });
+      return;
+    }
+
+    // Check if a list item is provided
+    if (req.body.list) {
+      // Update the list using $addToSet and fetch the updated user document
+      const updatedUser = await User.findByIdAndUpdate(
+        user.id,
+        { $addToSet: { list: req.body.list } },
+        { new: true } // Return the updated user document
+      ).populate("list"); // Populate the list with Book details
+
+      // Fetch the book title for a meaningful response
+      const book = await Book.findById(req.body.list, "title");
+      const bookTitle = book ? book.title : "Unknown Book";
+
+      res.status(200).json({
+        success: true,
+        message: `Successfully added ${bookTitle} to list`,
+        data: updatedUser.list, // Return the populated list
+      });
+      return;
+    }
+
+    // Populate the list even if no new item is added
+    const populatedUser = await User.findById(user.id).populate("list");
+
+    res.status(400).json({
+      success: false,
+      message: "No list item provided",
+      data: populatedUser.list, // Return the populated list
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const removeFromList = async (req, res) => {
+  try {
+    // Find user by username
+    let user = await User.findOne({ username: req.body.username });
+    if (!user) {
+      res.status(403).json({ success: false, message: "Incorrect login credentials" });
+      return;
+    }
+
+    // Check password
+    const passwordMatch = await bcrypt.compare(req.body.password, user.password);
+    if (!passwordMatch) {
+      res.status(403).json({ success: false, message: "Incorrect login credentials" });
+      return;
+    }
+
+    // Check if a list item is provided
+    if (req.body.list) {
+      // Update the list using $pull and fetch the updated user document
+      const updatedUser = await User.findByIdAndUpdate(
+        user.id,
+        { $pull: { list: req.body.list } },
+        { new: true } // Return the updated user document
+      ).populate("list"); // Populate the list with Book details
+
+      // Fetch the book title for a meaningful response
+      const book = await Book.findById(req.body.list, "title");
+      const bookTitle = book ? book.title : "Unknown Book";
+
+      res.status(200).json({
+        success: true,
+        message: `Successfully removed ${bookTitle} from list`,
+        data: updatedUser.list, // Return the populated list
+      });
+      return;
+    }
+
+    // Populate the list even if no new item is removed
+    const populatedUser = await User.findById(user.id).populate("list");
+
+    res.status(400).json({
+      success: false,
+      message: "No list item provided",
+      data: populatedUser.list, // Return the populated list
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 
 module.exports={
-  getUser,createUser,login,deleteUser,editUser
+  getUser,createUser,login,deleteUser,editUser,getList,addToList,removeFromList
 }
