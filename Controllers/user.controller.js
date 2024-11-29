@@ -142,20 +142,7 @@ const addToList = async (req, res) => {
 
 const removeFromList = async (req, res) => {
   try {
-    // Find user by username
-    let user = await User.findOne({ username: req.body.username });
-    if (!user) {
-      res.status(403).json({ success: false, message: "Incorrect login credentials" });
-      return;
-    }
-
-    // Check password
-    const passwordMatch = await bcrypt.compare(req.body.password, user.password);
-    if (!passwordMatch) {
-      res.status(403).json({ success: false, message: "Incorrect login credentials" });
-      return;
-    }
-
+   user = await User.findById(req.params.id);
     // Check if a list item is provided
     if (req.body.list) {
       // Update the list using $pull and fetch the updated user document
