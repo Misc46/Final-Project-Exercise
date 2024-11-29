@@ -23,7 +23,7 @@ const createUser = async (req, res) => {
     const passwordHash = await bcrypt.hash(req.body.password,saltRounds);
     var user = await User.create({name:req.body.name,username:req.body.username,password:passwordHash});
     user = await User.findById(user.id,"-password");
-    res.status(200).json({success:true,data:user});
+    res.status(200).json({success:true,message: "Successfully created new user." ,data:user});
   } catch (error) {
     res.status(500).json({ success:false, message: error.message });
   }
