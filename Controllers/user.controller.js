@@ -29,6 +29,16 @@ const createUser = async (req, res) => {
   }
 };
 
+const getOneUser = async (req, res) => {
+  try {
+      const { id } = (req.body);
+      const user = await User.findById(id);
+      res.status(200).json({success:true, message: "Retrieved a user", data: user})
+  } catch (error) {
+      res.status(500).json({message: error.message})
+  }
+}
+
 const login = async(req,res)=>{
   try{
     const user = await User.findOne({username:req.body.username});
@@ -179,5 +189,5 @@ const removeFromList = async (req, res) => {
 
 
 module.exports={
-  getUser,createUser,login,deleteUser,editUser,getList,addToList,removeFromList
+  getUser,createUser,login,deleteUser,editUser,getList,addToList,removeFromList, getOneUser
 }

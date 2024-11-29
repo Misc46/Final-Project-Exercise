@@ -33,6 +33,11 @@ const bookSchema = new mongoose.Schema(
             required: true,
             default: 0,
         },
+        author: {
+            type: String,
+            required: false,
+            default: "This Guy"
+        }
     },
     { timestamps: true }
 );

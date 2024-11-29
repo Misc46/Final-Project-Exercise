@@ -20,15 +20,13 @@ app.use(cors());
 app.use("/users", userRoute); // this uses query
 app.use("/item/", postRoute); // this uses body
 
-
-
 app.get("/", (req, res) => {
   res.send("Hello from Node API Server Updated");
 });
 
 
 async function run() {
-  await mongoose.connect(uri, clientOptions);
+  await mongoose.connect("mongodb+srv://erechoum:3xK.ytvbZxxPmpG@cluster0.ou8vg.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", clientOptions);
   await mongoose.connection.db.admin().command({ ping: 1 });
   console.log("Pinged your deployment. You successfully connected to MongoDB!");
   app.listen(3000,()=>{
