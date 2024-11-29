@@ -41,11 +41,11 @@ const login = async(req,res)=>{
       res.status(403).json({success:false, message:"Incorrect login credentials"});
       return
     }
-    res.status(200).json({success:true,message:`Successfully logged in as @${user.username}`});
+    res.status(200).json({success:true,message:`Successfully logged in as @${user.username}`,data:await User.findById(user.id,"-password")});
 
   }
   catch(err){
-    res.status(500).json({ success: false ,message: error.message });
+    res.status(500).json({ success: false ,message: err.message });
   }
 }
 
