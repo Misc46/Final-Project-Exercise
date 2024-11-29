@@ -2,55 +2,36 @@ const mongoose = require('mongoose');
 
 const bookSchema = new mongoose.Schema(
     {
+        rank:{
+            type: Number,
+            required: true,
+        },
         title: {
             type: String,
             required: true,
         },
-        synopsis: {
+        image: {
             type: String,
+            required: true,
             default: "",
         },
-        genres: [
-            {
-                type: String,
-            },
-        ],
-        author: {
+        type:{
             type: String,
             required: true,
         },
-        chapters: {
+        date: {
+            type: String,
+            required: true,
+        },
+        members: {
             type: Number,
+            required: true,
             default: 0,
         },
-        status: {
-            type: String,
-            enum: ["Ongoing", "Completed", "Hiatus"],
-            default: "Ongoing",
-        },
-        startDate: {
-            type: Date,
-        },
-        endDate: {
-            type: Date,
-        },
-        rating: {
-            type: String,
-            default: "",
-        },
-        coverImage: {
-            type: String,
-            default: "",
-        },
-        reviews: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Review",
-            },
-        ],
-        imageURL: {
-            type: String,
-            default: "",
+        score: {
+            type: Number,
+            required: true,
+            default: 0,
         },
     },
     { timestamps: true }
