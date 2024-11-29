@@ -48,6 +48,10 @@ const bookSchema = new mongoose.Schema(
                 ref: "Review",
             },
         ],
+        imageURL: {
+            type: String,
+            default: "",
+        },
     },
     { timestamps: true }
 );
