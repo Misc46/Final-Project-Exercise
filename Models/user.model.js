@@ -13,6 +13,18 @@ const userSchema = new mongoose.Schema(
         type:String,
         required:true
     },
+    email: {
+      type: String,
+      required: [true, 'Email is required'], // Custom error message
+      unique: true, // Ensures unique emails
+      validate: {
+        validator: function (value) {
+          // Regular expression to validate email
+          return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+        },
+        message: (props) => `${props.value} is not a valid email address!`, // Custom error message for invalid emails
+      },
+    },
     list: {
         type: [
           {

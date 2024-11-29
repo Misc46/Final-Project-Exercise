@@ -21,7 +21,7 @@ const getUser = async (req,res)=>{
 const createUser = async (req, res) => {
   try {
     const passwordHash = await bcrypt.hash(req.body.password,saltRounds);
-    var user = await User.create({name:req.body.name,username:req.body.username,password:passwordHash});
+    var user = await User.create({name:req.body.name,username:req.body.username,password:passwordHash,email:req.body.email});
     user = await User.findById(user.id,"-password");
     res.status(200).json({success:true,message: "Successfully created new user." ,data:user});
   } catch (error) {
